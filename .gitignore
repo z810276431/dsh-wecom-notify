@@ -1,0 +1,21 @@
+# Local credentials and generated runtime data
+/dsh-wechat-config.json
+/dsh-wecom-chat.json
+/dsh-wechat-state.json
+/dsh-wechat-notify.log
+*.log
+*.tmp
+.env
+.env.*
+!.env.example
+
+# Dependencies, build outputs and legacy installation cache
+/node_modules/
+/.wsdeps/
+/.pnpm-store/
+/dist/
+/coverage/
+
+# Editor and operating-system metadata
+.DS_Store
+Thumbs.db

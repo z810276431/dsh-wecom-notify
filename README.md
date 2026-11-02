@@ -220,65 +220,6 @@ Windows 可直接使用 [通知启动入口](<run-wechat-notify.cmd>)。可选�
 
 将通知入口注册到当前用户的登录启动项时，使用隐藏窗口执行它即可。该方式属于**用户登录自启动**，不是登录前运行的系统服务。辅助脚本不会创建其他 Web 服务器，也不会替换已有 GUI。
 
-## 开发与安全分发
-
-### 单一源码
-
-代码只维护一份。公开提交代码、[示例配置](<dsh-wechat-config.example.json>)、依赖清单、锁文件和测试；[忽略规则](<.gitignore>) 排除本地凭证、运行数据、依赖安装目录和生成产物。
-
-不要把凭证填进示例配置，也不要使用强制添加绕过忽略规则。若凭证曾进入 Git 历史，仅删除当前文件不够，应立即轮换凭证并处理历史记录。
-
-### 自动打包
-
-[打包脚本](<scripts/build-release.js>) 使用显式公开文件白名单，而不是复制整个工程：
-
-- 只打包源码、技术文档、空白示例、依赖清单、锁文件、测试及 CI 配置。
-- 不读取本地真实配置，也不将其复制后脱敏。
-- 不包含运行日志、扫描状态、会话目标、已安装依赖或旧分发副本。
-- 示例的凭证与可选本地路径字段必须为空，其他字段须符合脚本中的安全默认值；拒绝重复键和未知字段。扩展公开模板时，应同步更新校验架构。
-- 输入不得为符号链接或硬链接；输出使用稳定的公开文件顺序和时间戳。
-- 输出到忽略的 `dist` 中，按项目版本命名 ZIP。分发的是源码包，接收者仍需安装依赖并初始化配置。
-
-生成产物是自动输出，不是需要再次修改的第二份源码。更新 [依赖清单](<package.json>) 的版本后，重新运行构建命令即可生成对应版本。
-
-### 测试与 CI
-
-```sh
-pnpm test
-pnpm build:release
-```
-
-测试使用临时配置、日志样本和本地模拟服务，不调用真实推送接口。CI 在 Windows 和 Linux 上检查锁定依赖、测试和打包；不会部署、发布或读取凭证。
-
-### 发布到 GitHub
-
-仓库只保存源码和空白示例，凭证与运行数据始终留在本地。首次发布：
-
-```sh
-git init
-git add .
-git status          # 确认列表中没有本地配置、状态、日志或 node_modules
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/<用户名>/<仓库名>.git
-git push -u origin main
-```
-
-推送前务必检查 `git status`：若本地配置已被暂存，先执行 `git rm --cached dsh-wechat-config.json` 并确认忽略规则生效。凭证一旦进入提交历史，应立即轮换，而不是只删除文件。
-
-发布版本包有两种方式：
-
-1. **本地打包**：运行 `pnpm build:release`，在 `dist` 中得到源码 ZIP，手动上传到 GitHub Release。
-2. **自动发布**：[发布工作流](<.github/workflows/release.yml>) 在 GitHub 上发布 Release 时运行测试、打包，并把 ZIP 附加到该 Release。
-
-自动发布步骤：
-
-1. 更新 [依赖清单](<package.json>) 中的 `version`，提交并推送。
-2. 在 GitHub 仓库的 Releases 页面选择 **Draft a new release**。
-3. 创建与版本一致的标签，例如 `v0.1.0`，填写说明后点击 **Publish release**。
-4. 工作流完成后，Release 页面会出现 `dsh-wecom-notify-v0.1.0.zip`。
-
-工作流只使用仓库自带的 `GITHUB_TOKEN`，不需要配置任何凭证；它只上传构建产物，不发布 npm 包。仅推送标签不会触发发布，必须先发布 Release。若仓库策略禁止工作流写入，请在仓库设置中允许工作流读写内容权限。
 
 ## 限制与安全边界
 

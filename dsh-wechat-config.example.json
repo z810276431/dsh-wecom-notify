@@ -1,0 +1,27 @@
+{
+  "transport": "webhook",
+  "wecomWebhook": "",
+  "pushplus": {
+    "token": "",
+    "template": "markdown",
+    "channel": "wechat"
+  },
+  "serverchan": {
+    "sendKey": ""
+  },
+  "aibot": {
+    "botId": "",
+    "secret": "",
+    "chatFile": ""
+  },
+  "sessionsRoot": "",
+  "pollMs": 2000,
+  "notifyOn": ["completed", "aborted", "interrupted", "error", "blocked", "max-tokens"],
+  "mention": "",
+  "maxTextChars": 220,
+  "lockPort": 39271,
+  "requireHarness": true,
+  "harnessPort": 0,
+  "harnessProcess": "DeepSeek Harness.exe",
+  "harnessExecutable": ""
+}

@@ -1,0 +1,22 @@
+{
+  "name": "dsh-wecom-notify",
+  "version": "0.1.0",
+  "description": "Session-log based notifications for DeepSeek Harness",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "packageManager": "pnpm@11.28.5",
+  "scripts": {
+    "init:config": "node scripts/init-config.js",
+    "start": "node dsh-wechat-notify.js",
+    "test:notify": "node dsh-wechat-notify.js --test",
+    "scan:once": "node dsh-wechat-notify.js --once",
+    "test": "node --test test/*.test.js",
+    "build:release": "node scripts/build-release.js"
+  },
+  "dependencies": {
+    "ws": "8.22.0"
+  }
+}
